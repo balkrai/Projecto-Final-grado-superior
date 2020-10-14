@@ -1,0 +1,610 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="incidenciasModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="departamento">
+          <Key>
+            <PropertyRef Name="idDepartamento" />
+          </Key>
+          <Property Name="idDepartamento" Type="smallint" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="80" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estados">
+          <Key>
+            <PropertyRef Name="IdEstados" />
+          </Key>
+          <Property Name="IdEstados" Type="smallint" Nullable="false" />
+          <Property Name="Codigo_Estado" Type="smallint" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="incidencias">
+          <Key>
+            <PropertyRef Name="idincidencias" />
+          </Key>
+          <Property Name="idincidencias" Type="smallint" Nullable="false" />
+          <Property Name="Fecha_incidencia" Type="date" />
+          <Property Name="Fecha_Introduccion" Type="date" />
+          <Property Name="Profesor_introduce" Type="smallint" Nullable="false" />
+          <Property Name="Aula" Type="varchar" MaxLength="45" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="80" />
+          <Property Name="Observaciones" Type="varchar" MaxLength="80" />
+          <Property Name="Estado" Type="smallint" Nullable="false" />
+          <Property Name="Responsable" Type="smallint" />
+          <Property Name="Fecha_Resolucion" Type="date" />
+          <Property Name="Tiempo" Type="varchar" MaxLength="45" />
+          <Property Name="Informacion_Extra" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="permisos">
+          <Key>
+            <PropertyRef Name="idPermisos" />
+          </Key>
+          <Property Name="idPermisos" Type="smallint" Nullable="false" />
+          <Property Name="Codigo_Permiso" Type="smallint" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="profesores">
+          <Key>
+            <PropertyRef Name="idProfesores" />
+          </Key>
+          <Property Name="idProfesores" Type="smallint" Nullable="false" />
+          <Property Name="Dni" Type="varchar" MaxLength="9" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Apellidos" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Departamento" Type="smallint" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="45" />
+          <Property Name="Password" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Rol" Type="smallint" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="idRoles" />
+          </Key>
+          <Property Name="idRoles" Type="smallint" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="80" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tienen">
+          <Key>
+            <PropertyRef Name="Roles_idRoles" />
+            <PropertyRef Name="Permisos_idPermisos" />
+          </Key>
+          <Property Name="Roles_idRoles" Type="smallint" Nullable="false" />
+          <Property Name="Permisos_idPermisos" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tiposhw">
+          <Key>
+            <PropertyRef Name="idTipos" />
+          </Key>
+          <Property Name="idTipos" Type="smallint" Nullable="false" />
+          <Property Name="Tipo" Type="varchar" MaxLength="80" />
+          <Property Name="Numero_Serie" Type="varchar" MaxLength="45" />
+          <Property Name="Modelo" Type="varchar" MaxLength="45" />
+          <Property Name="idIncidencia" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tipossw">
+          <Key>
+            <PropertyRef Name="idTipos" />
+          </Key>
+          <Property Name="idTipos" Type="smallint" Nullable="false" />
+          <Property Name="Nom_Programa" Type="varchar" MaxLength="45" />
+          <Property Name="Version" Type="varchar" MaxLength="45" />
+          <Property Name="incidencias_idincidencias" Type="smallint" Nullable="false" />
+        </EntityType>
+        <Association Name="Dept">
+          <End Role="departamento" Type="Self.departamento" Multiplicity="1" />
+          <End Role="profesores" Type="Self.profesores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departamento">
+              <PropertyRef Name="idDepartamento" />
+            </Principal>
+            <Dependent Role="profesores">
+              <PropertyRef Name="Departamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Estado">
+          <End Role="estados" Type="Self.estados" Multiplicity="1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estados">
+              <PropertyRef Name="IdEstados" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Roles_has_Permisos_Permisos1">
+          <End Role="permisos" Type="Self.permisos" Multiplicity="1" />
+          <End Role="tienen" Type="Self.tienen" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permisos">
+              <PropertyRef Name="idPermisos" />
+            </Principal>
+            <Dependent Role="tienen">
+              <PropertyRef Name="Permisos_idPermisos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Roles_has_Permisos_Roles1">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="tienen" Type="Self.tienen" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="idRoles" />
+            </Principal>
+            <Dependent Role="tienen">
+              <PropertyRef Name="Roles_idRoles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tiposhw_incidencias1">
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="1" />
+          <End Role="tiposhw" Type="Self.tiposhw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="incidencias">
+              <PropertyRef Name="idincidencias" />
+            </Principal>
+            <Dependent Role="tiposhw">
+              <PropertyRef Name="idIncidencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tipossw_incidencias1">
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="1" />
+          <End Role="tipossw" Type="Self.tipossw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="incidencias">
+              <PropertyRef Name="idincidencias" />
+            </Principal>
+            <Dependent Role="tipossw">
+              <PropertyRef Name="incidencias_idincidencias" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Profesores1">
+          <End Role="profesores" Type="Self.profesores" Multiplicity="1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesores">
+              <PropertyRef Name="idProfesores" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Profesor_introduce" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProfesorRes">
+          <End Role="profesores" Type="Self.profesores" Multiplicity="0..1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesores">
+              <PropertyRef Name="idProfesores" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Responsable" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Roles1">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="profesores" Type="Self.profesores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="idRoles" />
+            </Principal>
+            <Dependent Role="profesores">
+              <PropertyRef Name="Rol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="incidenciasModelStoreContainer">
+          <EntitySet Name="departamento" EntityType="Self.departamento" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="estados" EntityType="Self.estados" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="incidencias" EntityType="Self.incidencias" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="permisos" EntityType="Self.permisos" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="profesores" EntityType="Self.profesores" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="roles" EntityType="Self.roles" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="tienen" EntityType="Self.tienen" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="tiposhw" EntityType="Self.tiposhw" Schema="incidencias" store:Type="Tables" />
+          <EntitySet Name="tipossw" EntityType="Self.tipossw" Schema="incidencias" store:Type="Tables" />
+          <AssociationSet Name="Dept" Association="Self.Dept">
+            <End Role="departamento" EntitySet="departamento" />
+            <End Role="profesores" EntitySet="profesores" />
+          </AssociationSet>
+          <AssociationSet Name="Estado" Association="Self.Estado">
+            <End Role="estados" EntitySet="estados" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Roles_has_Permisos_Permisos1" Association="Self.fk_Roles_has_Permisos_Permisos1">
+            <End Role="permisos" EntitySet="permisos" />
+            <End Role="tienen" EntitySet="tienen" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Roles_has_Permisos_Roles1" Association="Self.fk_Roles_has_Permisos_Roles1">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="tienen" EntitySet="tienen" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tiposhw_incidencias1" Association="Self.fk_tiposhw_incidencias1">
+            <End Role="incidencias" EntitySet="incidencias" />
+            <End Role="tiposhw" EntitySet="tiposhw" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tipossw_incidencias1" Association="Self.fk_tipossw_incidencias1">
+            <End Role="incidencias" EntitySet="incidencias" />
+            <End Role="tipossw" EntitySet="tipossw" />
+          </AssociationSet>
+          <AssociationSet Name="Profesores1" Association="Self.Profesores1">
+            <End Role="profesores" EntitySet="profesores" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="ProfesorRes" Association="Self.ProfesorRes">
+            <End Role="profesores" EntitySet="profesores" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="Roles1" Association="Self.Roles1">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="profesores" EntitySet="profesores" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="incidenciasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="departamento">
+          <Key>
+            <PropertyRef Name="idDepartamento" />
+          </Key>
+          <Property Name="idDepartamento" Type="Int16" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="profesores" Relationship="Self.Dept" FromRole="departamento" ToRole="profesores" />
+        </EntityType>
+        <EntityType Name="estados">
+          <Key>
+            <PropertyRef Name="IdEstados" />
+          </Key>
+          <Property Name="IdEstados" Type="Int16" Nullable="false" />
+          <Property Name="Codigo_Estado" Type="Int16" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="incidencias" Relationship="Self.Estado" FromRole="estados" ToRole="incidencias" />
+        </EntityType>
+        <EntityType Name="incidencias">
+          <Key>
+            <PropertyRef Name="idincidencias" />
+          </Key>
+          <Property Name="idincidencias" Type="Int16" Nullable="false" />
+          <Property Name="Fecha_incidencia" Type="DateTime" />
+          <Property Name="Fecha_Introduccion" Type="DateTime" />
+          <Property Name="Profesor_introduce" Type="Int16" Nullable="false" />
+          <Property Name="Aula" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Observaciones" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="Int16" Nullable="false" />
+          <Property Name="Responsable" Type="Int16" />
+          <Property Name="Fecha_Resolucion" Type="DateTime" />
+          <Property Name="Tiempo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Informacion_Extra" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="estados" Relationship="Self.Estado" FromRole="incidencias" ToRole="estados" />
+          <NavigationProperty Name="tiposhw" Relationship="Self.fk_tiposhw_incidencias1" FromRole="incidencias" ToRole="tiposhw" />
+          <NavigationProperty Name="tipossw" Relationship="Self.fk_tipossw_incidencias1" FromRole="incidencias" ToRole="tipossw" />
+          <NavigationProperty Name="profesores" Relationship="Self.Profesores1" FromRole="incidencias" ToRole="profesores" />
+          <NavigationProperty Name="profesores1" Relationship="Self.ProfesorRes" FromRole="incidencias" ToRole="profesores" />
+        </EntityType>
+        <EntityType Name="permisos">
+          <Key>
+            <PropertyRef Name="idPermisos" />
+          </Key>
+          <Property Name="idPermisos" Type="Int16" Nullable="false" />
+          <Property Name="Codigo_Permiso" Type="Int16" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="roles" Relationship="Self.tienen" FromRole="permisos" ToRole="roles" />
+        </EntityType>
+        <EntityType Name="profesores">
+          <Key>
+            <PropertyRef Name="idProfesores" />
+          </Key>
+          <Property Name="idProfesores" Type="Int16" Nullable="false" />
+          <Property Name="Dni" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Departamento" Type="Int16" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Rol" Type="Int16" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="departamento1" Relationship="Self.Dept" FromRole="profesores" ToRole="departamento" />
+          <NavigationProperty Name="incidencias" Relationship="Self.Profesores1" FromRole="profesores" ToRole="incidencias" />
+          <NavigationProperty Name="incidencias1" Relationship="Self.ProfesorRes" FromRole="profesores" ToRole="incidencias" />
+          <NavigationProperty Name="roles" Relationship="Self.Roles1" FromRole="profesores" ToRole="roles" />
+        </EntityType>
+        <EntityType Name="roles">
+          <Key>
+            <PropertyRef Name="idRoles" />
+          </Key>
+          <Property Name="idRoles" Type="Int16" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="profesores" Relationship="Self.Roles1" FromRole="roles" ToRole="profesores" />
+          <NavigationProperty Name="permisos" Relationship="Self.tienen" FromRole="roles" ToRole="permisos" />
+        </EntityType>
+        <EntityType Name="tiposhw">
+          <Key>
+            <PropertyRef Name="idTipos" />
+          </Key>
+          <Property Name="idTipos" Type="Int16" Nullable="false" />
+          <Property Name="Tipo" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Numero_Serie" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Modelo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="idIncidencia" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="incidencias" Relationship="Self.fk_tiposhw_incidencias1" FromRole="tiposhw" ToRole="incidencias" />
+        </EntityType>
+        <EntityType Name="tipossw">
+          <Key>
+            <PropertyRef Name="idTipos" />
+          </Key>
+          <Property Name="idTipos" Type="Int16" Nullable="false" />
+          <Property Name="Nom_Programa" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Version" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="incidencias_idincidencias" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="incidencias" Relationship="Self.fk_tipossw_incidencias1" FromRole="tipossw" ToRole="incidencias" />
+        </EntityType>
+        <Association Name="Dept">
+          <End Role="departamento" Type="Self.departamento" Multiplicity="1" />
+          <End Role="profesores" Type="Self.profesores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="departamento">
+              <PropertyRef Name="idDepartamento" />
+            </Principal>
+            <Dependent Role="profesores">
+              <PropertyRef Name="Departamento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Estado">
+          <End Role="estados" Type="Self.estados" Multiplicity="1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estados">
+              <PropertyRef Name="IdEstados" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tiposhw_incidencias1">
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="1" />
+          <End Role="tiposhw" Type="Self.tiposhw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="incidencias">
+              <PropertyRef Name="idincidencias" />
+            </Principal>
+            <Dependent Role="tiposhw">
+              <PropertyRef Name="idIncidencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_tipossw_incidencias1">
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="1" />
+          <End Role="tipossw" Type="Self.tipossw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="incidencias">
+              <PropertyRef Name="idincidencias" />
+            </Principal>
+            <Dependent Role="tipossw">
+              <PropertyRef Name="incidencias_idincidencias" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Profesores1">
+          <End Role="profesores" Type="Self.profesores" Multiplicity="1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesores">
+              <PropertyRef Name="idProfesores" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Profesor_introduce" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProfesorRes">
+          <End Role="profesores" Type="Self.profesores" Multiplicity="0..1" />
+          <End Role="incidencias" Type="Self.incidencias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="profesores">
+              <PropertyRef Name="idProfesores" />
+            </Principal>
+            <Dependent Role="incidencias">
+              <PropertyRef Name="Responsable" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Roles1">
+          <End Role="roles" Type="Self.roles" Multiplicity="1" />
+          <End Role="profesores" Type="Self.profesores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roles">
+              <PropertyRef Name="idRoles" />
+            </Principal>
+            <Dependent Role="profesores">
+              <PropertyRef Name="Rol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="tienen">
+          <End Role="permisos" Type="Self.permisos" Multiplicity="*" />
+          <End Role="roles" Type="Self.roles" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="incidenciasEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="departamento" EntityType="Self.departamento" />
+          <EntitySet Name="estados" EntityType="Self.estados" />
+          <EntitySet Name="incidencias" EntityType="Self.incidencias" />
+          <EntitySet Name="permisos" EntityType="Self.permisos" />
+          <EntitySet Name="profesores" EntityType="Self.profesores" />
+          <EntitySet Name="roles" EntityType="Self.roles" />
+          <EntitySet Name="tiposhw" EntityType="Self.tiposhw" />
+          <EntitySet Name="tipossw" EntityType="Self.tipossw" />
+          <AssociationSet Name="Dept" Association="Self.Dept">
+            <End Role="departamento" EntitySet="departamento" />
+            <End Role="profesores" EntitySet="profesores" />
+          </AssociationSet>
+          <AssociationSet Name="Estado" Association="Self.Estado">
+            <End Role="estados" EntitySet="estados" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tiposhw_incidencias1" Association="Self.fk_tiposhw_incidencias1">
+            <End Role="incidencias" EntitySet="incidencias" />
+            <End Role="tiposhw" EntitySet="tiposhw" />
+          </AssociationSet>
+          <AssociationSet Name="fk_tipossw_incidencias1" Association="Self.fk_tipossw_incidencias1">
+            <End Role="incidencias" EntitySet="incidencias" />
+            <End Role="tipossw" EntitySet="tipossw" />
+          </AssociationSet>
+          <AssociationSet Name="Profesores1" Association="Self.Profesores1">
+            <End Role="profesores" EntitySet="profesores" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="ProfesorRes" Association="Self.ProfesorRes">
+            <End Role="profesores" EntitySet="profesores" />
+            <End Role="incidencias" EntitySet="incidencias" />
+          </AssociationSet>
+          <AssociationSet Name="Roles1" Association="Self.Roles1">
+            <End Role="roles" EntitySet="roles" />
+            <End Role="profesores" EntitySet="profesores" />
+          </AssociationSet>
+          <AssociationSet Name="tienen" Association="Self.tienen">
+            <End Role="permisos" EntitySet="permisos" />
+            <End Role="roles" EntitySet="roles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="incidenciasModelStoreContainer" CdmEntityContainer="incidenciasEntities">
+          <EntitySetMapping Name="departamento">
+            <EntityTypeMapping TypeName="incidenciasModel.departamento">
+              <MappingFragment StoreEntitySet="departamento">
+                <ScalarProperty Name="idDepartamento" ColumnName="idDepartamento" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estados">
+            <EntityTypeMapping TypeName="incidenciasModel.estados">
+              <MappingFragment StoreEntitySet="estados">
+                <ScalarProperty Name="IdEstados" ColumnName="IdEstados" />
+                <ScalarProperty Name="Codigo_Estado" ColumnName="Codigo_Estado" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="incidencias">
+            <EntityTypeMapping TypeName="incidenciasModel.incidencias">
+              <MappingFragment StoreEntitySet="incidencias">
+                <ScalarProperty Name="idincidencias" ColumnName="idincidencias" />
+                <ScalarProperty Name="Fecha_incidencia" ColumnName="Fecha_incidencia" />
+                <ScalarProperty Name="Fecha_Introduccion" ColumnName="Fecha_Introduccion" />
+                <ScalarProperty Name="Profesor_introduce" ColumnName="Profesor_introduce" />
+                <ScalarProperty Name="Aula" ColumnName="Aula" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Responsable" ColumnName="Responsable" />
+                <ScalarProperty Name="Fecha_Resolucion" ColumnName="Fecha_Resolucion" />
+                <ScalarProperty Name="Tiempo" ColumnName="Tiempo" />
+                <ScalarProperty Name="Informacion_Extra" ColumnName="Informacion_Extra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="permisos">
+            <EntityTypeMapping TypeName="incidenciasModel.permisos">
+              <MappingFragment StoreEntitySet="permisos">
+                <ScalarProperty Name="idPermisos" ColumnName="idPermisos" />
+                <ScalarProperty Name="Codigo_Permiso" ColumnName="Codigo_Permiso" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="profesores">
+            <EntityTypeMapping TypeName="incidenciasModel.profesores">
+              <MappingFragment StoreEntitySet="profesores">
+                <ScalarProperty Name="idProfesores" ColumnName="idProfesores" />
+                <ScalarProperty Name="Dni" ColumnName="Dni" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Departamento" ColumnName="Departamento" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="roles">
+            <EntityTypeMapping TypeName="incidenciasModel.roles">
+              <MappingFragment StoreEntitySet="roles">
+                <ScalarProperty Name="idRoles" ColumnName="idRoles" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tiposhw">
+            <EntityTypeMapping TypeName="incidenciasModel.tiposhw">
+              <MappingFragment StoreEntitySet="tiposhw">
+                <ScalarProperty Name="idTipos" ColumnName="idTipos" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Numero_Serie" ColumnName="Numero_Serie" />
+                <ScalarProperty Name="Modelo" ColumnName="Modelo" />
+                <ScalarProperty Name="idIncidencia" ColumnName="idIncidencia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipossw">
+            <EntityTypeMapping TypeName="incidenciasModel.tipossw">
+              <MappingFragment StoreEntitySet="tipossw">
+                <ScalarProperty Name="idTipos" ColumnName="idTipos" />
+                <ScalarProperty Name="Nom_Programa" ColumnName="Nom_Programa" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="incidencias_idincidencias" ColumnName="incidencias_idincidencias" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="tienen" TypeName="incidenciasModel.tienen" StoreEntitySet="tienen">
+            <EndProperty Name="permisos">
+              <ScalarProperty Name="idPermisos" ColumnName="Permisos_idPermisos" />
+            </EndProperty>
+            <EndProperty Name="roles">
+              <ScalarProperty Name="idRoles" ColumnName="Roles_idRoles" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
